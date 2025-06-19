@@ -134,7 +134,7 @@ let MyForm = {
 						/>
 						<my-button image="time.png"
 							v-if="hasLog"
-							@trigger="showLog = !showLog"
+							@trigger="toggleLog"
 							:active="!isNew"
 							:captionTitle="capApp.button.logHint"
 						/>
@@ -154,7 +154,7 @@ let MyForm = {
 					/>
 					<my-button image="question.png"
 						v-if="hasHelp"
-						@trigger="showHelp = !showHelp"
+						@trigger="toggleHelp"
 						:active="helpAvailable"
 						:captionTitle="capApp.button.helpHint"
 					/>
@@ -262,7 +262,6 @@ let MyForm = {
 					v-for="(f,i) in fields"
 					@clipboard="messageSet('[CLIPBOARD]')"
 					@execute-function="jsFunctionRun($event,[],exposedFunctions)"
-					@hotkey="handleHotkeys"
 					@open-form="openForm"
 					@set-form-args="setFormArgs"
 					@set-touched="fieldSetTouched"
@@ -294,7 +293,7 @@ let MyForm = {
 		<!-- form change logs -->
 		<my-form-log
 			v-if="showLog"
-			@close-log="showLog = false"
+			@close-log="toggleLog"
 			:dataFieldMap="fieldIdMapData"
 			:entityIdMapEffect="entityIdMapEffect"
 			:form="form"
@@ -311,7 +310,7 @@ let MyForm = {
 		<!-- form help articles -->
 		<my-articles class="form-help"
 			v-if="showHelp"
-			@close="showHelp = false"
+			@close="toggleHelp"
 			:form="form"
 			:isFloat="isPopUpFloating"
 			:moduleId="moduleId"
@@ -1274,6 +1273,14 @@ let MyForm = {
 			const el = this.$refs.fields.querySelector(`[data-field-is-valid="0"]`);
 			if(el !== null)
 				el.scrollIntoView();
+		},
+		toggleHelp() {
+			this.showHelp = !this.showHelp;
+			this.resized();
+		},
+		toggleLog() {
+			this.showLog = !this.showLog;
+			this.resized();
 		},
 		
 		// timer
